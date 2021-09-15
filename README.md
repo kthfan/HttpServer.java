@@ -11,6 +11,14 @@ new HttpServer(
   }
 }.start():
 ```
+### Close server:
+```java
+HttpServer httpServer = new HttpServer(); // using default port 80
+new Thread(){
+  httpServer.start();
+};
+httpServer.close();
+```
 ## Request:
 ```java
 new HttpServer(){
