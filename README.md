@@ -55,7 +55,8 @@ new HttpServer(){
 }.start():
 ```
 ## Advanced:
-## ByteIterator:
+### ByteIterator:
+implements ReadableByteChannel
 ```java
 new HttpServer(){
   public void onRequest(HttpServer.Request request, HttpServer.Response response, Socket socket){
@@ -69,6 +70,23 @@ new HttpServer(){
     bytes = reader.getRemainingBytes();
     bb = reader.getRemainingByteBuffer();
     ByteBuffer[] bbArray = reader.getRemainingByteBuffers();
+  }
+}.start():
+```
+### ByteSender:
+implements WritableByteChannel
+```java
+new HttpServer(){
+  public void onRequest(HttpServer.Request request, HttpServer.Response response, Socket socket){
+    ByteSender writer = response.getWriter();
+    
+    writer.send((byte) 255);
+    writer.send(new byte[]{55, 56, 57});
+    writer.send(ByteBuffer.allocate(1024));
+    writer.send(new ByteBuffer[]{
+      ByteBuffer.allocate(1024),
+      ByteBuffer.allocate(1024)
+    });
   }
 }.start():
 ```
