@@ -31,4 +31,27 @@ new HttpServer(){
   }
 }.start():
 ```
+## Response:
+```java
+new HttpServer(){
+  public void onRequest(HttpServer.Request request, HttpServer.Response response, Socket socket){
+    //setBody and setBodyByText will overwrite original body
+    response.setBody("<h1>original text</h1>".getBytes()); // byte array required
+    response.setBodyByText("<h1>overwrite text</h1>");	// String required
+				
+    response.setHttpVersion("1.1");
+    response.setStatusCode(200);
+    response.setReasonPhrase("OK");
+				
+				
+    //will overwrite original body
+    response.setHeader("Content-Type", "text/html; charset=utf-8");
+    //won't overwrite original body
+    response.setDuplicateHeader("Access-Control-Allow-Origin", "https://localhost");
+				
+    response.setCookie("name", "john");
+    response.setSession("age", "22");
+  }
+}.start():
+```
 
