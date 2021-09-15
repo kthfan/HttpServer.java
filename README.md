@@ -80,6 +80,16 @@ new HttpServer(){
   public void onRequest(HttpServer.Request request, HttpServer.Response response, Socket socket){
     ByteSender writer = response.getWriter();
     
+    // must send header first
+    if(!response.isHeaderSent()) {
+    	response.sendHeader();
+    }
+    // send body whether you want
+    if(!response.isBodySent()) {
+    	response.sendBody();
+    }
+    // or use response.sendResponse() send both header and body
+    
     writer.send((byte) 255);
     writer.send(new byte[]{55, 56, 57});
     writer.send(ByteBuffer.allocate(1024));
@@ -87,6 +97,24 @@ new HttpServer(){
       ByteBuffer.allocate(1024),
       ByteBuffer.allocate(1024)
     });
+  }
+}.start():
+```
+### For async:
+```java
+new HttpServer(){
+  public void onRequest(HttpServer.Request request, HttpServer.Response response, Socket socket){
+    // won't close socket channel after leaving method onRequest
+    if(response.isAutoClose()){
+      response.setAutoClose(false);
+    }
+    
+    new Thread(){
+      doSomething();
+      // needs to close socket manually
+      socket.getChannel().close();
+    }.start();
+    
   }
 }.start():
 ```
